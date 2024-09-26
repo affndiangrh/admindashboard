@@ -20,7 +20,7 @@ Admin Dashboard is a sleek and modern dashboard design created using HTML, CSS, 
 
 To get started with AdminHub Dashboard, follow these steps:
 
-1. Clone this repository: `git clone `
+1. Clone this repository: `git clone https://github.com/affndiangrh/admindashboard.git`
 2. Open the `index.html` file in your web browser to view the dashboard.
 
 ## Technologies Used
