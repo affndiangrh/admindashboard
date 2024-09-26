@@ -235,68 +235,56 @@
 
     <script src="script.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", function () {
+        const todoListElement = document.getElementById("todoList");
         const addTodoButton = document.getElementById("addTodo");
-        const todoList = document.getElementById("todoList");
+        const todos = JSON.parse(localStorage.getItem("todos")) || [];
 
-        // Fungsi untuk menambah todo baru
+        function renderTodos() {
+          todoListElement.innerHTML = "";
+          todos.forEach((todo, index) => {
+            const li = document.createElement("li");
+            li.className = todo.completed ? "completed" : "not-completed";
+            li.innerHTML = `
+                <p>${todo.text}</p>
+                <i class="bx bx-edit-alt edit-icon" data-index="${index}"></i>
+                <i class="bx bx-trash delete-icon" data-index="${index}"></i>
+            `;
+            todoListElement.appendChild(li);
+          });
+        }
+
+        function saveTodos() {
+          localStorage.setItem("todos", JSON.stringify(todos));
+        }
+
         addTodoButton.addEventListener("click", () => {
-          const newTodo = prompt("Masukkan todo baru:");
-          if (newTodo) {
-            const newTodoItem = document.createElement("li");
-            newTodoItem.className = "not-completed";
-            newTodoItem.innerHTML = `
-        <p>${newTodo}</p>
-        <i class="bx bx-edit-alt edit-icon"></i>
-        <i class="bx bx-trash delete-icon"></i>
-      `;
-            todoList.appendChild(newTodoItem);
-            attachTodoEvents(newTodoItem);
+          const newTodoText = prompt("Masukkan todo baru:");
+          if (newTodoText) {
+            todos.push({ text: newTodoText, completed: false });
+            saveTodos();
+            renderTodos();
           }
         });
 
-        // Fungsi untuk menandai todo sebagai selesai atau belum selesai
-        function toggleTodoComplete(event) {
-          const todoItem = event.target.closest("li");
-          if (todoItem.classList.contains("completed")) {
-            todoItem.classList.remove("completed");
-            todoItem.classList.add("not-completed");
-          } else {
-            todoItem.classList.remove("not-completed");
-            todoItem.classList.add("completed");
+        todoListElement.addEventListener("click", (e) => {
+          if (e.target.classList.contains("delete-icon")) {
+            const index = e.target.dataset.index;
+            todos.splice(index, 1);
+            saveTodos();
+            renderTodos();
+          } else if (e.target.classList.contains("edit-icon")) {
+            const index = e.target.dataset.index;
+            const updatedText = prompt("Edit todo:", todos[index].text);
+            if (updatedText) {
+              todos[index].text = updatedText;
+              saveTodos();
+              renderTodos();
+            }
           }
-        }
+        });
 
-        // Fungsi untuk mengedit todo
-        function editTodo(event) {
-          const todoItem = event.target.closest("li");
-          const todoText = todoItem.querySelector("p");
-          const newTodo = prompt("Edit todo:", todoText.innerText);
-          if (newTodo) {
-            todoText.innerText = newTodo;
-          }
-        }
-
-        // Fungsi untuk menghapus todo
-        function deleteTodo(event) {
-          const todoItem = event.target.closest("li");
-          todoItem.remove();
-        }
-
-        // Fungsi untuk menambahkan event listener ke todo item
-        function attachTodoEvents(todoItem) {
-          const todoText = todoItem.querySelector("p");
-          const editIcon = todoItem.querySelector(".edit-icon");
-          const deleteIcon = todoItem.querySelector(".delete-icon");
-
-          todoText.addEventListener("click", toggleTodoComplete);
-          editIcon.addEventListener("click", editTodo);
-          deleteIcon.addEventListener("click", deleteTodo);
-        }
-
-        // Tambahkan event listener ke todo item yang sudah ada
-        const existingTodos = todoList.querySelectorAll("li");
-        existingTodos.forEach(attachTodoEvents);
+        renderTodos();
       });
     </script>
   </body>
