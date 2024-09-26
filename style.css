@@ -175,7 +175,10 @@ body {
 	left: 60px;
 }
 
-
+.edit-icon {
+  cursor: pointer;
+  margin-left: 250px;
+}
 
 
 /* NAVBAR */
@@ -539,6 +542,10 @@ body {
 	#content nav .nav-link {
 		display: none;
 	}
+	.edit-icon {
+  cursor: pointer;
+  margin-left: 250px;
+}
 }
 
 
@@ -589,4 +596,8 @@ body {
 	#content main .table-data .todo .todo-list {
 		min-width: 420px;
 	}
+	.edit-icon {
+  cursor: pointer;
+  margin-left: 250px;
+}
 }
